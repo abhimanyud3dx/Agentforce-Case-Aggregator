@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>AppendCasesToText</name>
+        <label>AppendCasesToText</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>CasesListData</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>CaseDetails</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_Over_Cases</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>DuplicateCaseList</name>
+        <elementSubtype>AddPromptInstructions</elementSubtype>
+        <label>DuplicateCaseList</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Output.Prompt</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>{!CasesListData}
+</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <environments>Default</environments>
+    <formulas>
+        <name>NowMinus8Hours</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW()-8/24</expression>
+    </formulas>
+    <interviewLabel>Last 8 hours Case Finder {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Last 8 hours Case Finder</label>
+    <loops>
+        <name>Loop_Over_Cases</name>
+        <label>Loop Over Cases</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Case_Records</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AppendCasesToText</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>DuplicateCaseList</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>PromptFlow</processType>
+    <recordLookups>
+        <name>Case_Records</name>
+        <label>Case Records</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Over_Cases</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>CreatedDate</field>
+            <operator>GreaterThanOrEqualTo</operator>
+            <value>
+                <elementReference>NowMinus8Hours</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>AccountId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>record.AccountId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <limit>
+            <numberValue>25.0</numberValue>
+        </limit>
+        <object>Case</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Description</queriedFields>
+        <queriedFields>ContactEmail</queriedFields>
+        <queriedFields>ContactMobile</queriedFields>
+        <queriedFields>Origin</queriedFields>
+        <queriedFields>Priority</queriedFields>
+        <queriedFields>Type</queriedFields>
+        <queriedFields>SuppliedEmail</queriedFields>
+        <queriedFields>SuppliedCompany</queriedFields>
+        <queriedFields>SuppliedName</queriedFields>
+        <queriedFields>SuppliedPhone</queriedFields>
+        <queriedFields>Subject</queriedFields>
+        <sortField>CreatedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Case_Records</targetReference>
+        </connector>
+        <triggerType>Capability</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>CaseDetails</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>{!Loop_Over_Cases.Id} = {
+Description : {!Loop_Over_Cases.Description}
+ContactEmail : {!Loop_Over_Cases.ContactEmail}
+ContactMobile : {!Loop_Over_Cases.ContactMobile}
+Priority : {!Loop_Over_Cases.Priority}
+Origin : {!Loop_Over_Cases.Origin}
+Type : {!Loop_Over_Cases.Type}
+SuppliedEmail : {!Loop_Over_Cases.SuppliedEmail}
+SuppliedCompany : {!Loop_Over_Cases.SuppliedCompany}
+SuppliedName : {!Loop_Over_Cases.SuppliedName}
+SuppliedPhone : {!Loop_Over_Cases.SuppliedPhone}
+Subject : {!Loop_Over_Cases.Subject}
+}</text>
+    </textTemplates>
+    <variables>
+        <name>CasesListData</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>record</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Case</objectType>
+    </variables>
+</Flow>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersionIdentifier>fsRHpVUP3y7UPZWskmCOM6poGyfrYXCgmgLA4loXMMM=_2</activeVersionIdentifier>
+    <developerName>Duplicate_Case_Detector</developerName>
+    <masterLabel>Duplicate Case Detector</masterLabel>
+    <templateVersions>
+        <content>You are an assistant that identifies similar or duplicate Salesforce Case records. 
+
+I will provide:
+1. A single Case record: [record]
+2. A list of other Case records: [cases]
+
+Your task:
+- Compare the given Case [record] with each Case in [cases].
+- Identify which Cases are potentially duplicates or very similar based on their key fields (e.g., Subject, Description, Status, Priority, Account, Contact, Product, or any other relevant text fields).
+- Return **only** a JSON array of the Ids of the Cases from [cases] that are similar or duplicates.
+- Do not return any additional text.
+
+Example output:
+[&quot;5003t00001ABC1a&quot;, &quot;5003t00001ABC2b&quot;]
+
+Here is the data:
+
+Single Case:
+
+Description : {!$Input:record.Description}
+ContactEmail : {!$Input:record.ContactEmail}
+ContactMobile : {!$Input:record.ContactMobile}
+Priority : {!$Input:record.Priority}
+Origin : {!$Input:record.Origin}
+Type : {!$Input:record.Type}
+SuppliedEmail : {!$Input:record.SuppliedEmail}
+SuppliedCompany : {!$Input:record.SuppliedCompany}
+SuppliedName : {!$Input:record.SuppliedName}
+SuppliedPhone : {!$Input:record.SuppliedPhone}
+Subject : {!$Input:record.Subject}
+
+
+List of Cases:
+{!$Flow:Last_8_hours_Case_Finder.Prompt}
+
+
+</content>
+        <inputs>
+            <apiName>record</apiName>
+            <definition>SOBJECT://Case</definition>
+            <masterLabel>record</masterLabel>
+            <referenceName>Input:record</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://Last_8_hours_Case_Finder</definition>
+            <parameters>
+                <definition>SOBJECT://Case</definition>
+                <isRequired>true</isRequired>
+                <parameterName>record</parameterName>
+                <valueExpression>{!$Input:record}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Last_8_hours_Case_Finder</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>fsRHpVUP3y7UPZWskmCOM6poGyfrYXCgmgLA4loXMMM=_1</versionIdentifier>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an assistant that identifies similar or duplicate Salesforce Case records. 
+
+I will provide:
+1. A single Case record: [record]
+2. A list of other Case records: [cases]
+
+Your task:
+- Compare the given Case [record] with each Case in [cases].
+- Identify which Cases are potentially duplicates or very similar based on their key fields (e.g., Subject, Description, Status, Priority, Account, Contact, Product, or any other relevant text fields).
+- Generate Collective Description of [record] and  [cases] using Decription field
+- Generate Collective Subject of [record] and [cases] using Subject field
+- Return **only** a JSON array of the Ids of the Cases from [cases] that are similar or duplicates in line 1, Decription in line 2 and Subject in Line 3
+- Do not return any additional text.
+
+Example output:
+{
+&quot;caseIds&quot;: [&quot;5003t00001ABC1a&quot;, &quot;5003t00001ABC2b&quot;],
+&quot;Description &quot; : &quot;This is sample Decription of Case&quot;,
+&quot;Subject&quot; :&quot;This is Sample Subject of Case&quot;
+}
+
+Here is the data:
+
+Single Case:
+
+Description : {!$Input:record.Description}
+ContactEmail : {!$Input:record.ContactEmail}
+ContactMobile : {!$Input:record.ContactMobile}
+Priority : {!$Input:record.Priority}
+Origin : {!$Input:record.Origin}
+Type : {!$Input:record.Type}
+SuppliedEmail : {!$Input:record.SuppliedEmail}
+SuppliedCompany : {!$Input:record.SuppliedCompany}
+SuppliedName : {!$Input:record.SuppliedName}
+SuppliedPhone : {!$Input:record.SuppliedPhone}
+Subject : {!$Input:record.Subject}
+
+
+List of Cases:
+{!$Flow:Last_8_hours_Case_Finder.Prompt}
+
+
+</content>
+        <inputs>
+            <apiName>record</apiName>
+            <definition>SOBJECT://Case</definition>
+            <masterLabel>record</masterLabel>
+            <referenceName>Input:record</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT4OmniMini</primaryModel>
+        <status>Published</status>
+        <templateDataProviders>
+            <definition>flow://Last_8_hours_Case_Finder</definition>
+            <parameters>
+                <definition>SOBJECT://Case</definition>
+                <isRequired>true</isRequired>
+                <parameterName>record</parameterName>
+                <valueExpression>{!$Input:record}</valueExpression>
+            </parameters>
+            <referenceName>Flow:Last_8_hours_Case_Finder</referenceName>
+        </templateDataProviders>
+        <versionIdentifier>fsRHpVUP3y7UPZWskmCOM6poGyfrYXCgmgLA4loXMMM=_2</versionIdentifier>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>
